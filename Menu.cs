@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace LibVLCSharp.WinForms.Sample
+{
+    public partial class Menu : UserControl
+    {
+        public event EventHandler WatchBTN_Clicked;
+        public event EventHandler ShareBTN_Clicked;
+        public Menu()
+        {
+            InitializeComponent();
+
+            watchBTN.Click += (s,e) =>
+            {
+                WatchBTN_Clicked?.Invoke(this, e);
+            };
+
+            shareBTN.Click += (s, e) =>
+            {
+                ShareBTN_Clicked?.Invoke(this, e);
+            };
+        }
+    }
+}
