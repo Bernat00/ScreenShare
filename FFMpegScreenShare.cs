@@ -137,6 +137,7 @@ namespace LibVLCSharp.WinForms.Sample
             ffmpeg.StartInfo.FileName = filename;
             ffmpeg.StartInfo.Arguments = FfmpegParamsString;
             ffmpeg.StartInfo.CreateNoWindow = true;
+            ffmpeg.PriorityClass = ProcessPriorityClass.AboveNormal;
 
             ffmpeg.Start();
 
