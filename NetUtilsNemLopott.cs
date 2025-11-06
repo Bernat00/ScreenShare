@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LibVLCSharp.WinForms.Sample
+{
+
+    public class AdapterInfo
+    {
+        public required string Name { get; init; } = "";
+        public required string Description { get; init; } = "";
+        public required IPAddress IP { get; init; }
+        public required IPAddress Mask { get; init; }
+        public required IPAddress Broadcast { get; init; }
+        public required PhysicalAddress MAC { get; init; }
+        public override string ToString() => $"{Name} ({Description}) - {IP}";
+    }
+
+    public static class NetUtilsNemLopott
+    {
+        public static List<AdapterInfo> GetEthernetAdapters()
+        {
+            var list = new List<AdapterInfo>();
+            var validInterfaces = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(ni =>
+                    ni is { OperationalStatus: OperationalStatus.Up, NetworkInterfaceType: NetworkInterfaceType.Ethernet or NetworkInterfaceType.Wireless80211 } &&
+                    !ni.Description.Contains("virtual", StringComparison.CurrentCultureIgnoreCase) &&
+                    !ni.Name.Contains("virtual", StringComparison.CurrentCultureIgnoreCase))
+                .ToList();
+
+            foreach (var ni in validInterfaces)
+            {
+                foreach (var info in ni.GetIPProperties().UnicastAddresses)
+                {
+                    if (info.Address.AddressFamily != AddressFamily.InterNetwork) continue;
+
+                    var ip = info.Address;
+                    var mask = info.IPv4Mask;
+                    var ipBytes = ip.GetAddressBytes();
+                    var maskBytes = mask.GetAddressBytes();
+                    var broadcastBytes = new byte[4];
+                    for (var i = 0; i < 4; i++)
+                        broadcastBytes[i] = (byte)(ipBytes[i] | (maskBytes[i] ^ 255));
+                    var broadcast = new IPAddress(broadcastBytes);
+
+                    list.Add(new AdapterInfo
+                    {
+                        Name = ni.Name,
+                        Description = ni.Description,
+                        IP = ip,
+                        Mask = mask,
+                        Broadcast = broadcast,
+                        MAC = ni.GetPhysicalAddress()
+                    });
+                }
+            }
+
+            return list;
+        }
+    }
+}

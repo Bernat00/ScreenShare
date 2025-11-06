@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StrEnum;
+
 using System.Windows.Forms;
 
 namespace LibVLCSharp.WinForms.Sample
 {
-    internal class FFMpegScreenShare: IDisposable
+    public struct FFmpegParams
+    {
+        public string ip;
+        public string port;
+        public Encoder encoder;
+    }
+
+    public class Encoder : StringEnum<Encoder>
+    {
+        public static readonly Encoder Universal = Define("libx264");
+    }
+
+    public class FFMpegScreenShare: IDisposable
     {
         Process ffmpeg;
-        string ffmpegParams = "-f gdigrab -framerate 30 -i desktop -c:v libx264 -tune zerolatency -preset ultrafast -f mpegts \"udp://127.0.0.1:35001?pkt_size=1316\"";
         string ffmpegPath = @".\ffmpeg";
         string ffmpegName = "ffmpeg.exe";
+        public FFmpegParams FfmpegParams;
 
 
         public string FfmpegPath
@@ -23,37 +35,41 @@ namespace LibVLCSharp.WinForms.Sample
             set { ffmpegPath = value; }
         }
 
-        public string FFmpegParams
+        string FfmpegParamsString
         {
-            get {  return ffmpegParams; }
-            set { ffmpegParams = value; }
+            get 
+            { 
+                return $"-f gdigrab -framerate 30 -i desktop -c:v {(string)FfmpegParams.encoder} -tune " +
+                    $"zerolatency -preset ultrafast -f mpegts" +
+                    $" \"udp://{FfmpegParams.ip}:{FfmpegParams.port}?pkt_size=1316\"";
+            }
         }
 
 
 
         public FFMpegScreenShare()
         {
-            
+            FfmpegParams = new FFmpegParams()
+            {
+                ip="127.0.0.0",
+                port= "35001",
+                encoder=Encoder.Universal
+            };
         }
 
         public void StartShare()
         {
             string filename = Path.Combine(ffmpegPath, ffmpegName);
 
-            try
-            {
-                ffmpeg = new Process();
-                ffmpeg.StartInfo.FileName = filename;
-                ffmpeg.StartInfo.Arguments = ffmpegParams;
-                ffmpeg.StartInfo.CreateNoWindow = true;
-                ffmpeg.Start();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error");
-            }
-        }
+            ffmpeg = new Process();
+            ffmpeg.StartInfo.FileName = filename;
+            ffmpeg.StartInfo.Arguments = FfmpegParamsString;
+            //ffmpeg.StartInfo.CreateNoWindow = true;
 
+            ffmpeg.Start();
+
+
+        }
 
         public void Dispose()
         {

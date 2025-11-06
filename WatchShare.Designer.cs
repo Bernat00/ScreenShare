@@ -18,7 +18,7 @@ namespace LibVLCSharp.WinForms.Sample
             if (disposing && (components != null))
             {
                 components.Dispose();
-                this._mp?.Dispose();
+                this.videoView?.Dispose();
                 this._libVLC?.Dispose();
             }
             base.Dispose(disposing);
@@ -32,7 +32,13 @@ namespace LibVLCSharp.WinForms.Sample
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            SuspendLayout();
+            // 
+            // WatchShare
+            // 
+            Name = "WatchShare";
+            Size = new System.Drawing.Size(660, 405);
+            ResumeLayout(false);
         }
 
         #endregion

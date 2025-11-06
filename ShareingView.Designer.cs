@@ -1,6 +1,6 @@
 ﻿namespace LibVLCSharp.WinForms.Sample
 {
-    partial class Shareing
+    partial class ShareingView
     {
         /// <summary> 
         /// Required designer variable.
@@ -11,11 +11,13 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
+                share?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -28,19 +30,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            label1 = new System.Windows.Forms.Label();
             SuspendLayout();
             // 
-            // Shareing
+            // label1
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Segoe UI", 16F);
+            label1.Location = new System.Drawing.Point(199, 147);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(139, 37);
+            label1.TabIndex = 0;
+            label1.Text = "Shareing...";
+            // 
+            // ShareingView
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            Font = new System.Drawing.Font("Segoe UI", 16F);
-            Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            Name = "Shareing";
-            Size = new System.Drawing.Size(772, 411);
+            Controls.Add(label1);
+            Name = "ShareingView";
+            Size = new System.Drawing.Size(551, 329);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private System.Windows.Forms.Label label1;
     }
 }

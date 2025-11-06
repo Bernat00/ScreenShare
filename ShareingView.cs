@@ -10,14 +10,23 @@ using System.Windows.Forms;
 
 namespace LibVLCSharp.WinForms.Sample
 {
-    public partial class Shareing : UserControl
+    public partial class ShareingView : UserControl, IDisposable
     {
-        FFMpegScreenShare share;
-
-        public Shareing()
+        readonly FFMpegScreenShare share;
+        public ShareingView()
         {
             InitializeComponent();
             share = new FFMpegScreenShare();
+        }
+
+        public ShareingView(FFMpegScreenShare share)
+        {
+            InitializeComponent();
+            this.share = share;
+        }
+
+        public void StartShare()
+        {
             share.StartShare();
         }
     }

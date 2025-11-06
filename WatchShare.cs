@@ -11,10 +11,12 @@ using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.WinForms.Sample
 {
-    public partial class WatchShare : VideoView, IDisposable
+    public partial class WatchShare : UserControl, IDisposable
     {
+        VideoView videoView;
+        public string Port { get; set; }
         public LibVLC _libVLC;
-        public MediaPlayer _mp;
+
 
         public WatchShare()
         {
@@ -24,20 +26,36 @@ namespace LibVLCSharp.WinForms.Sample
             }
 
             InitializeComponent();
+
+            Port = "35001";
+
             _libVLC = new LibVLC();
-            _mp = new MediaPlayer(_libVLC);
-            MediaPlayer = _mp;
+            videoView = new VideoView();
+
+            videoView.MediaPlayer = new MediaPlayer(_libVLC);
+
+            SizeChange(new object(), new EventArgs());
+            SizeChanged += SizeChange;
+
+            Controls.Add(videoView);
+            videoView.Show();
         }
 
-        public void Connect(string sourceAdress = "udp://@:35001")
+        public void Connect()
         {
-            _mp.Play(new Media(_libVLC, sourceAdress, FromType.FromLocation));
+            string sourceAdress = $"udp://@:{Port}";
+            videoView.MediaPlayer.Play(new Media(_libVLC, sourceAdress, FromType.FromLocation));
         }
 
         public void Disconnect()
         {
-            _mp.Stop();
+            videoView.MediaPlayer.Stop();
         }
 
+        void SizeChange(object sender, EventArgs e)
+        {
+            videoView.Height = ClientRectangle.Height;
+            videoView.Width = ClientRectangle.Width;
+        }
     }
 }

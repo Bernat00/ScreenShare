@@ -14,6 +14,16 @@ namespace LibVLCSharp.WinForms.Sample
     {
         public event EventHandler WatchBTN_Clicked;
         public event EventHandler ShareBTN_Clicked;
+        public event EventHandler SelectedAdapterChanged;
+
+        public AdapterInfo SelectedAdapter { 
+            get
+            {
+                return comboBox1.SelectedItem as AdapterInfo;
+            } 
+        }
+
+
         public Menu()
         {
             InitializeComponent();
@@ -27,6 +37,10 @@ namespace LibVLCSharp.WinForms.Sample
             {
                 ShareBTN_Clicked?.Invoke(this, e);
             };
+
+
+            comboBox1.DataSource = NetUtilsNemLopott.GetEthernetAdapters();
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
         }
     }
 }

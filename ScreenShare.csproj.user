@@ -8,11 +8,11 @@
     <Compile Update="Menu.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Shareing.cs">
+    <Compile Update="ShareingView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="WatchShare.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
 </Project>

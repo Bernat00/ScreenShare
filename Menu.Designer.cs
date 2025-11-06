@@ -30,6 +30,7 @@
         {
             watchBTN = new System.Windows.Forms.Button();
             shareBTN = new System.Windows.Forms.Button();
+            comboBox1 = new System.Windows.Forms.ComboBox();
             SuspendLayout();
             // 
             // watchBTN
@@ -54,10 +55,19 @@
             shareBTN.Text = "Start Share";
             shareBTN.UseVisualStyleBackColor = true;
             // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new System.Drawing.Point(311, 381);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new System.Drawing.Size(351, 45);
+            comboBox1.TabIndex = 2;
+            // 
             // Menu
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(comboBox1);
             Controls.Add(shareBTN);
             Controls.Add(watchBTN);
             Font = new System.Drawing.Font("Segoe UI", 16F);
@@ -71,5 +81,6 @@
 
         private System.Windows.Forms.Button watchBTN;
         private System.Windows.Forms.Button shareBTN;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
