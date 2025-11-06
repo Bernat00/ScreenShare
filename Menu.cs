@@ -15,12 +15,22 @@ namespace LibVLCSharp.WinForms.Sample
         public event EventHandler WatchBTN_Clicked;
         public event EventHandler ShareBTN_Clicked;
         public event EventHandler SelectedAdapterChanged;
+        public event EventHandler SelectedEncoderChanged;
 
-        public AdapterInfo SelectedAdapter { 
+        public AdapterInfo SelectedAdapter
+        {
             get
             {
                 return comboBox1.SelectedItem as AdapterInfo;
-            } 
+            }
+        }
+
+        public Encoder SelectedEncoder
+        {
+            get
+            {
+                return comboBox2.SelectedItem as Encoder;
+            }
         }
 
 
@@ -28,7 +38,7 @@ namespace LibVLCSharp.WinForms.Sample
         {
             InitializeComponent();
 
-            watchBTN.Click += (s,e) =>
+            watchBTN.Click += (s, e) =>
             {
                 WatchBTN_Clicked?.Invoke(this, e);
             };
@@ -41,6 +51,10 @@ namespace LibVLCSharp.WinForms.Sample
 
             comboBox1.DataSource = NetUtilsNemLopott.GetEthernetAdapters();
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            comboBox2.DataSource = new List<Encoder> { Encoder.Intel, Encoder.Nvidia, Encoder.Universal };
+            comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+
         }
     }
 }

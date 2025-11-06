@@ -37,7 +37,7 @@
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.SystemColors.ControlLightLight;
-            ClientSize = new System.Drawing.Size(976, 450);
+            ClientSize = new System.Drawing.Size(976, 489);
             ForeColor = System.Drawing.Color.Black;
             Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             Name = "Form1";

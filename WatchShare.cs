@@ -32,7 +32,12 @@ namespace LibVLCSharp.WinForms.Sample
             _libVLC = new LibVLC();
             videoView = new VideoView();
 
-            videoView.MediaPlayer = new MediaPlayer(_libVLC);
+            videoView.MediaPlayer = new MediaPlayer(_libVLC)
+            {
+                FileCaching = 0,
+                NetworkCaching = 0,
+                EnableHardwareDecoding = true,
+            };
 
             SizeChange(new object(), new EventArgs());
             SizeChanged += SizeChange;

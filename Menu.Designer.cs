@@ -31,6 +31,7 @@
             watchBTN = new System.Windows.Forms.Button();
             shareBTN = new System.Windows.Forms.Button();
             comboBox1 = new System.Windows.Forms.ComboBox();
+            comboBox2 = new System.Windows.Forms.ComboBox();
             SuspendLayout();
             // 
             // watchBTN
@@ -58,15 +59,24 @@
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new System.Drawing.Point(311, 381);
+            comboBox1.Location = new System.Drawing.Point(124, 342);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new System.Drawing.Size(351, 45);
             comboBox1.TabIndex = 2;
+            // 
+            // comboBox2
+            // 
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Location = new System.Drawing.Point(513, 342);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new System.Drawing.Size(351, 45);
+            comboBox2.TabIndex = 3;
             // 
             // Menu
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(comboBox2);
             Controls.Add(comboBox1);
             Controls.Add(shareBTN);
             Controls.Add(watchBTN);
@@ -82,5 +92,6 @@
         private System.Windows.Forms.Button watchBTN;
         private System.Windows.Forms.Button shareBTN;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox2;
     }
 }

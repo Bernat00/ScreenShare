@@ -27,6 +27,7 @@ namespace LibVLCSharp.WinForms.Sample
         {
             FFMpegScreenShare fFMpegScreenShare = new();
             fFMpegScreenShare.FfmpegParams.ip = menu.SelectedAdapter.Broadcast.ToString();
+            fFMpegScreenShare.FfmpegParams.encoder = menu.SelectedEncoder;
 
             shareing = new ShareingView(fFMpegScreenShare);
             Controls.Add(shareing);
