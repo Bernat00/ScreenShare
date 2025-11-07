@@ -33,7 +33,7 @@ namespace LibVLCSharp.WinForms.Sample
             Controls.Add(shareing);
             menu.Hide();
             shareing.Show();
-            shareing.StartShare();
+            shareing.StartShare(menu.DebugMode);
 
         }
         void WatchShareEvent(object s, EventArgs e)

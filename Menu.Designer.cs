@@ -32,6 +32,7 @@
             shareBTN = new System.Windows.Forms.Button();
             comboBox1 = new System.Windows.Forms.ComboBox();
             comboBox2 = new System.Windows.Forms.ComboBox();
+            checkBox1 = new System.Windows.Forms.CheckBox();
             SuspendLayout();
             // 
             // watchBTN
@@ -72,10 +73,21 @@
             comboBox2.Size = new System.Drawing.Size(351, 45);
             comboBox2.TabIndex = 3;
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new System.Drawing.Point(419, 91);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new System.Drawing.Size(195, 41);
+            checkBox1.TabIndex = 5;
+            checkBox1.Text = "Debug mode";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Menu
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(checkBox1);
             Controls.Add(comboBox2);
             Controls.Add(comboBox1);
             Controls.Add(shareBTN);
@@ -85,6 +97,7 @@
             Name = "Menu";
             Size = new System.Drawing.Size(977, 494);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -93,5 +106,6 @@
         private System.Windows.Forms.Button shareBTN;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

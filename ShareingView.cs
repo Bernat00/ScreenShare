@@ -25,9 +25,9 @@ namespace LibVLCSharp.WinForms.Sample
             this.share = share;
         }
 
-        public void StartShare()
+        public void StartShare(bool debug)
         {
-            share.StartShare();
+            share.StartShare(debug);
         }
     }
 }

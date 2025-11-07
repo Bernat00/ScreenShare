@@ -35,6 +35,7 @@ namespace LibVLCSharp.WinForms.Sample
         string ffmpegPath = @".\ffmpeg";
         string ffmpegName = "ffmpeg.exe";
         public FFmpegParams FfmpegParams;
+        bool debug;
 
 
         public string FfmpegPath
@@ -143,14 +144,14 @@ namespace LibVLCSharp.WinForms.Sample
             };
         }
 
-        public void StartShare()
+        public void StartShare(bool debug = false)
         {
             string filename = Path.Combine(ffmpegPath, ffmpegName);
 
             ffmpeg = new Process();
             ffmpeg.StartInfo.FileName = filename;
             ffmpeg.StartInfo.Arguments = FfmpegParamsString;
-            ffmpeg.StartInfo.CreateNoWindow = true;
+            ffmpeg.StartInfo.CreateNoWindow = !debug;
 
             ffmpeg.Start();
 

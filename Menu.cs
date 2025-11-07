@@ -33,6 +33,11 @@ namespace LibVLCSharp.WinForms.Sample
             }
         }
 
+        public bool DebugMode
+        {
+            get { return checkBox1.Checked; }
+        }
+
 
         public Menu()
         {
