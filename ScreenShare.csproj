@@ -3,13 +3,21 @@
     <Title>LibVLCSharp.WinForms.Sample</Title>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net8.0-windows</TargetFrameworks>
+    <TargetFramework>net8.0-windows</TargetFramework>
+	<PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+	<PublishTrimmed>false</PublishTrimmed>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms.Sample</RootNamespace>
     <Configurations>Debug;Release;AllInOne</Configurations>
     <FileVersion>0.1</FileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='AllInOne|net8.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'!='Debug'">
     <Optimize>True</Optimize>
+	<SelfContained>true</SelfContained>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LibVLCSharp.WinForms" Version="3.9.4" />
