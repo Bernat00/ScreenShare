@@ -51,31 +51,42 @@ namespace LibVLCSharp.WinForms.Sample
                 // Pixel format selection
                 string pixelFormat = FfmpegParams.encoder switch
                 {
-                    var e when e == Encoder.Intel || e == Encoder.IntelH265 => "nv12",        // QSV prefers NV12
-                    var e when e == Encoder.Nvidia || e == Encoder.NvidiaH265 => "yuv420p",   // NVENC prefers YUV420P
-                    _ => "yuv444p"                                                            // Software (x264/x265): crisp desktop text
+                    // Intel QuickSync prefers NV12, but p010 improves text clarity (10-bit precision)
+                    var e when e == Encoder.Intel || e == Encoder.IntelH265 => "p010",
+
+                    // NVENC prefers YUV420P; YUV444P if supported for clearer text
+                    var e when e == Encoder.Nvidia || e == Encoder.NvidiaH265 => "yuv420p",
+
+                    // Software encoders (x264/x265): use YUV444P for crisp text
+                    _ => "yuv444p"
                 };
 
                 // Encoder-specific tuning
                 string encoderTuning = FfmpegParams.encoder switch
                 {
                     // Intel QuickSync — H.264
-                    var e when e == Encoder.Intel => "-look_ahead 0 -async_depth 1 -tune zerolatency",
+                    var e when e == Encoder.Intel =>
+                        "-async_depth 1 -tune:v 0 -global_quality 22",
 
-                    // Intel QuickSync — H.265
-                    var e when e == Encoder.IntelH265 => "-look_ahead 0 -async_depth 1 -tune:v 0 -low_power 1 -global_quality 20",
+                    // Intel QuickSync — H.265 (no -look_ahead support)
+                    var e when e == Encoder.IntelH265 =>
+                        "-async_depth 1 -low_power 1 -global_quality 22",
 
                     // NVIDIA NVENC — H.264
-                    var e when e == Encoder.Nvidia => "-rc:v vbr -cq 19 -profile:v high -bf 2 -no-scenecut 1 -spatial_aq 1",
+                    var e when e == Encoder.Nvidia =>
+                        "-rc:v vbr -cq 19 -profile:v high -bf 2 -no-scenecut 1 -spatial_aq 1 -aq-strength 15",
 
                     // NVIDIA NVENC — H.265
-                    var e when e == Encoder.NvidiaH265 => "-rc:v vbr -cq 19 -profile:v main -bf 2 -no-scenecut 1 -spatial_aq 1",
+                    var e when e == Encoder.NvidiaH265 =>
+                        "-rc:v vbr -cq 19 -profile:v main -bf 2 -no-scenecut 1 -spatial_aq 1 -aq-strength 15",
 
-                    // Software x264
-                    var e when e == Encoder.Universal => "-tune psnr -preset fast",
+                    // Software x264 — full color, sharp text
+                    var e when e == Encoder.Universal =>
+                        "-tune zerolatency -preset fast -crf 18",
 
-                    // Software x265
-                    var e when e == Encoder.UniversalH265 => "-preset fast -x265-params \"tune=psnr:aq-mode=3:vbv-bufsize=10000:vbv-maxrate=10000\"",
+                    // Software x265 — 4:4:4, tuned for text clarity
+                    var e when e == Encoder.UniversalH265 =>
+                        "-preset fast -x265-params \"crf=18:tune=psnr:aq-mode=3:vbv-bufsize=10000:vbv-maxrate=10000\"",
 
                     _ => ""
                 };
@@ -122,6 +133,8 @@ namespace LibVLCSharp.WinForms.Sample
                     "-f mpegts",
                     $"\"udp://{FfmpegParams.ip}:{FfmpegParams.port}?pkt_size=1316&ttl=1&overrun_nonfatal=1\""
                 );
+
+
 
 
 
