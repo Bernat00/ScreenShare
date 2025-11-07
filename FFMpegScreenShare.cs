@@ -18,12 +18,15 @@ namespace LibVLCSharp.WinForms.Sample
     }
 
     //todo preset enum (fast, veryfast, stb)
-
+    
     public class Encoder : StringEnum<Encoder>
     {
         public static readonly Encoder Universal = Define("libx264");
         public static readonly Encoder Nvidia = Define("libx264");
         public static readonly Encoder Intel = Define("h264_qsv");
+        public static readonly Encoder UniversalH265 = Define("libx264");
+        public static readonly Encoder NvidiaH265 = Define("hevc_nvenc");
+        public static readonly Encoder IntelH265 = Define("hevc_qsv");
     }
 
     public class FFMpegScreenShare: IDisposable
@@ -44,71 +47,82 @@ namespace LibVLCSharp.WinForms.Sample
             get //todo megnezni mi ez a swich sintax
             {
 
-                // Choose pixel format based on encoder
+                // Pixel format selection
                 string pixelFormat = FfmpegParams.encoder switch
                 {
-                    var e when e == Encoder.Intel => "nv12",       // native for Intel QSV
-                    var e when e == Encoder.Nvidia => "yuv420p",    // NVENC / general hw-friendly
-                    _ => "yuv444p"     // full color for crisp desktop text
+                    var e when e == Encoder.Intel || e == Encoder.IntelH265 => "nv12",        // QSV prefers NV12
+                    var e when e == Encoder.Nvidia || e == Encoder.NvidiaH265 => "yuv420p",   // NVENC prefers YUV420P
+                    _ => "yuv444p"                                                            // Software (x264/x265): crisp desktop text
                 };
 
-                // Encoder-specific tuning (only valid options per encoder)
+                // Encoder-specific tuning
                 string encoderTuning = FfmpegParams.encoder switch
                 {
-                    // Intel QSV (h264_qsv): use QSV-friendly options only
+                    // Intel QuickSync — H.264
                     var e when e == Encoder.Intel => "-look_ahead 0 -async_depth 1 -tune zerolatency",
 
-                    // NVIDIA NVENC (if you actually set Encoder.Nvidia to "h264_nvenc" elsewhere):
-                    // Use NVENC-specific rc/cq options (these are ignored by libx264)
-                    var e when e == Encoder.Nvidia => "-rc:v vbr -cq 18 -profile:v high",
+                    // Intel QuickSync — H.265
+                    var e when e == Encoder.IntelH265 => "-look_ahead 0 -async_depth 1 -tune:v 0 -low_power 1 -global_quality 20",
 
-                    // Default (libx264 / software): bias toward preserving small details (psnr),
-                    // which helps text readability. libx264 supports -tune psnr.
-                    _ => "-tune psnr"
+                    // NVIDIA NVENC — H.264
+                    var e when e == Encoder.Nvidia => "-rc:v vbr -cq 19 -profile:v high -bf 2 -no-scenecut 1 -spatial_aq 1",
+
+                    // NVIDIA NVENC — H.265
+                    var e when e == Encoder.NvidiaH265 => "-rc:v vbr -cq 19 -profile:v main -bf 2 -no-scenecut 1 -spatial_aq 1",
+
+                    // Software x264
+                    var e when e == Encoder.Universal => "-tune psnr -preset fast",
+
+                    // Software x265
+                    var e when e == Encoder.UniversalH265 => "-preset fast -x265-params \"tune=psnr:aq-mode=3:vbv-bufsize=10000:vbv-maxrate=10000\"",
+
+                    _ => ""
                 };
 
-                // Build FFmpeg argument string (readable)
+                // Shared quality settings
+                string crf = "18";
+                string bitrate = "10M";
+                string preset = "fast";
+
+                // Build the final FFmpeg argument string
                 string ffmpegArgs = string.Join(" ",
                     // Input (screen capture)
                     "-f gdigrab",
                     "-framerate 30",
-
-                    // Increase capture-side queue / buffer to avoid brief stalls
                     "-thread_queue_size 1024",
                     "-rtbufsize 200M",
                     "-probesize 32M",
                     "-analyzeduration 0",
-
                     "-i desktop",
 
                     // Video encoding
                     $"-c:v {(string)FfmpegParams.encoder}",
                     $"-pix_fmt {pixelFormat}",
-                    "-preset fast",                     // quality/speed balance
-                    "-crf 18",                          // crisp text
-                    "-b:v 10M",
-                    "-maxrate 10M",
-                    "-bufsize 10M",                     // smooth stream
-                    "-g 60",                            // keyframe spacing
+                    $"-preset {preset}",
+                    $"-crf {crf}",
+                    $"-b:v {bitrate}",
+                    $"-maxrate {bitrate}",
+                    $"-bufsize {bitrate}",
+                    "-g 60",
                     "-r 30",
-                    "-fps_mode cfr",                    // replaces deprecated -vsync
+                    "-fps_mode cfr",
                     "-flags low_delay",
                     "-fflags nobuffer",
                     "-use_wallclock_as_timestamps 1",
                     "-threads 4",
 
-                    //tmp_fix
+                    // Extra buffering
                     "-thread_queue_size 2048",
                     "-rtbufsize 500M",
 
-
-                    // Add encoder-specific options (only non-empty)
                     encoderTuning,
 
                     // Output (UDP)
                     "-f mpegts",
                     $"\"udp://{FfmpegParams.ip}:{FfmpegParams.port}?pkt_size=1316&ttl=1&overrun_nonfatal=1\""
                 );
+
+
 
 
 

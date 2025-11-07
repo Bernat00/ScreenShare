@@ -52,7 +52,7 @@ namespace LibVLCSharp.WinForms.Sample
             comboBox1.DataSource = NetUtilsNemLopott.GetEthernetAdapters();
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            comboBox2.DataSource = new List<Encoder> { Encoder.Intel, Encoder.Nvidia, Encoder.Universal };
+            comboBox2.DataSource = new List<Encoder> { Encoder.Intel, Encoder.Nvidia, Encoder.Universal, Encoder.IntelH265, Encoder.NvidiaH265, Encoder.UniversalH265 };
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
 
         }
